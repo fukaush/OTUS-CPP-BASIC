@@ -33,7 +33,7 @@ class Min : public IStatistics {
 
 class Max : public IStatistics {
 	public:
-		Max() : m_max{std::numeric_limits<double>::min()} {}
+		Max() : m_max{std::numeric_limits<double>::lowest()} {}
 
 		void update(const double& next) override {
 			if (next > m_max) {
@@ -71,7 +71,11 @@ class Mean : public IStatistics {
 				sum += number;
 			}
 
-			mean = sum / static_cast<int>(numbers.size());
+			mean = 0;
+
+			if (sum) {
+				mean = sum / static_cast<int>(numbers.size());
+			}
 
 			cached = true;
 
