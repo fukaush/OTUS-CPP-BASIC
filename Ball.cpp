@@ -1,7 +1,4 @@
 #include "Ball.hpp"
-#include <cmath>
-#include <fstream>
-#include <iostream>
 
 /**
  * Задает скорость объекта
@@ -60,5 +57,5 @@ double Ball::getRadius() const {
  * эквивалентна объему: PI * radius^3 * 4. / 3.
  */
 double Ball::getMass() const {
-    return 4. / 3 * M_PI * pow(radius, 3) ;
+    return mass;
 }

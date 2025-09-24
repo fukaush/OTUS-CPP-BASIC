@@ -1,9 +1,11 @@
 #pragma once
+#include <cmath>
+#include <fstream>
 #include "Painter.hpp"
 #include "Point.hpp"
 #include "Velocity.hpp"
 
-#include <fstream>
+constexpr double factor = 4.0 / 3.0 * M_PI;
 
 class Ball {
     double radius = 0.0;
@@ -11,12 +13,19 @@ class Ball {
     Color color = Color(0, 0, 0);
     Velocity velocity = Velocity();
     Point center = Point();
+    double mass;
 public:
     Ball() = default;
-    Ball(const double &_radius, const Color &_color, const Velocity &_velocity, const Point &_center, const bool &_isCollidable):
-        radius{_radius}, color {_color}, velocity(_velocity), center{_center}, isCollidable{_isCollidable} {};
+    Ball(const double _radius, const Color _color, const Velocity _velocity, const Point _center, const bool _isCollidable):
+        radius{_radius}, color {_color}, velocity(_velocity), center{_center}, isCollidable{_isCollidable} {
+        mass = calculateMass(radius);
+    };
 
-    void setRadius(const double& radius);
+    static double calculateMass(double radius) {
+        return factor * pow(radius, 3);
+    }
+
+    void setRadius(const double radius);
     void setCenter(const Point& center);
     void setVelocity(const Velocity& velocity);
 
