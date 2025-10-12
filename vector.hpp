@@ -1,40 +1,41 @@
 #pragma once
 #include <iostream>
 
+template<typename T>
 struct Iterator {
-    Iterator(int* ptr) : m_ptr{ptr} {}
+    Iterator(T* _ptr) : ptr{_ptr} {}
 
-    int& operator*() const {
-        return *m_ptr;
+    T& operator*() const {
+        return *ptr;
     }
-    int* operator->() {
-        return m_ptr;
+    T* operator->() {
+        return ptr;
     }
 
     // Prefix increment
     Iterator& operator++() {
-        m_ptr++;
+        ptr++;
 
         return *this;
     }
     // Postfix increment
-    Iterator operator++(int) {
+    Iterator operator++(T) {
         Iterator tmp = *this;
 
-        m_ptr++;
+        ptr++;
 
         return tmp;
     }
 
     friend bool operator== (const Iterator& a, const Iterator& b) {
-        return a.m_ptr == b.m_ptr;
+        return a.ptr == b.ptr;
     };
     friend bool operator!= (const Iterator& a, const Iterator& b) {
-        return a.m_ptr != b.m_ptr;
+        return a.ptr != b.ptr;
     };
 
     private:
-        int* m_ptr;
+        T* ptr;
 };
 
 namespace MyContainer {
@@ -46,14 +47,13 @@ namespace MyContainer {
         void setCount(size_t count) {
             size = count;
         }
+        inline bool isInRange(size_t index) const {
+            return index < size;
+        }
     public:
         Vector() = default;
-        Vector& operator=(Vector& other) {
-            if (this == &other) {
-                return *this;
-            }
-
-            T *newRegion = new T[100];
+        Vector(const Vector &other) {
+            T *newRegion = new T[other.size];
 
             for (size_t i = 0; i < other.size; i++) {
                 newRegion[i] = other[i];
@@ -64,7 +64,23 @@ namespace MyContainer {
 
             return *this;
         }
-        Vector& operator=(Vector&& other) {
+        Vector& operator=(const Vector& other) {
+            if (this == &other) {
+                return *this;
+            }
+
+            T *newRegion = new T[other.size];
+
+            for (size_t i = 0; i < other.size; i++) {
+                newRegion[i] = other[i];
+            }
+
+            items = newRegion;
+            size = other.size;
+
+            return *this;
+        }
+        Vector& operator=(const Vector&& other) {
             if (this == &other) {
                 return *this;
             }
@@ -88,16 +104,11 @@ namespace MyContainer {
         void push_back(T value);
         void insert(size_t index, T value);
         void erase(size_t index, size_t count = 1);
-        inline bool isInRange(size_t index) const {
-            return index < size;
-        }
 
         template<typename T>
         friend std::ostream& operator<<(std::ostream &os, const Vector<T> &vector);
 
         T& operator[] (size_t index) {
-            // std::cout << "[] index: " << index << "; size" << size << std::endl;
-
             if (!isInRange(index)) {
                 throw std::out_of_range("index вне диапазона items");
             }
@@ -106,10 +117,10 @@ namespace MyContainer {
         }
 
 
-        Iterator begin() {
+        Iterator<T> begin() {
             return Iterator(items);
         }
-        Iterator end() {
+        Iterator<T> end() {
             return Iterator(&items[size]);
         }
     };
@@ -117,8 +128,7 @@ namespace MyContainer {
     template<typename T>
     void Vector<T>::insert(size_t index, T value) {
         if (size <= index) {
-            // Можем бросить исключение или значение по умолчанию, но пока игнорируем
-            return;
+            throw std::out_of_range("index вне диапазона items");
         }
 
         const size_t newCount = size + 1;
@@ -161,9 +171,8 @@ namespace MyContainer {
 
     template<typename T>
     void Vector<T>::erase(size_t index, size_t count) {
-        /** Здесь можем бросить исключение out of range */
         if (!isInRange(index)) {
-            return;
+            throw std::out_of_range("index вне диапазона items");
         }
 
         if (!count) {
