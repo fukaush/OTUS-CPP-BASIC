@@ -61,13 +61,13 @@ namespace MyContainer {
 
             items = newRegion;
             size = other.size;
-
-            return *this;
         }
         Vector& operator=(const Vector& other) {
             if (this == &other) {
                 return *this;
             }
+
+            delete[] items;
 
             T *newRegion = new T[other.size];
 
@@ -80,10 +80,12 @@ namespace MyContainer {
 
             return *this;
         }
-        Vector& operator=(const Vector&& other) {
+        Vector& operator=(Vector&& other) {
             if (this == &other) {
                 return *this;
             }
+
+            delete[] items;
 
             items = other.items;
             other.items = nullptr;
@@ -108,7 +110,7 @@ namespace MyContainer {
         template<typename T>
         friend std::ostream& operator<<(std::ostream &os, const Vector<T> &vector);
 
-        T& operator[] (size_t index) {
+        T& operator[](size_t index) const {
             if (!isInRange(index)) {
                 throw std::out_of_range("index вне диапазона items");
             }
