@@ -12,13 +12,12 @@ struct Iterator {
         return ptr;
     }
 
-    // Prefix increment
     Iterator& operator++() {
         ptr++;
 
         return *this;
     }
-    // Postfix increment
+
     Iterator operator++(T) {
         Iterator tmp = *this;
 
@@ -99,7 +98,9 @@ namespace MyContainer {
 
             items = nullptr;
         }
-
+        bool empty() {
+            return size == 0;
+        }
         size_t getCount() {
             return size;
         }
@@ -117,7 +118,6 @@ namespace MyContainer {
 
             return items[index];
         }
-
 
         Iterator<T> begin() {
             return Iterator(items);

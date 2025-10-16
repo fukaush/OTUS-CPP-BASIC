@@ -4,25 +4,25 @@
 namespace MyContainer {
     template<typename T>
     class Node {
-    public:
-        Node<T>* next = nullptr; // указатель на следующий элемент Node
-        Node<T>* prev = nullptr; // указатель на предыдущий элемент Node
-        T data; // пользовательские данные (хранимый объект)
+        public:
+            Node<T>* next = nullptr;
+            Node<T>* prev = nullptr;
+            T data;
 
-        Node(T _data): data{_data} {};
-        ~Node() {
-            Node::link(prev, next);
-        }
-
-        static void link(Node<T>* prevNode, Node<T>* nextNode)  {
-            if (prevNode) {
-                prevNode->next = nextNode;
+            Node(T _data): data{_data} {};
+            ~Node() {
+                Node::link(prev, next);
             }
 
-            if (nextNode) {
-                nextNode->prev = prevNode;
+            static void link(Node<T>* prevNode, Node<T>* nextNode)  {
+                if (prevNode) {
+                    prevNode->next = nextNode;
+                }
+
+                if (nextNode) {
+                    nextNode->prev = prevNode;
+                }
             }
-        }
     };
 
     template<typename T>
@@ -30,25 +30,38 @@ namespace MyContainer {
         Node<T>* first = nullptr;
         Node<T>* last = nullptr;
         size_t count = 0;
-    public:
-        List() = default;
-        ~List() {
-            while(first) {
-                Node<T> *node = first->next;
 
-                delete first;
+        public:
+            List() = default;
+            ~List() {
+                while(first) {
+                    Node<T> *node = first->next;
 
-                first = node;
+                    delete first;
+
+                    first = node;
+                }
             }
-        }
+            Node<T>* front() {
+                return first;
+            }
+            Node<T>* back() {
+                return last;
+            }
+            Node<T>* prepend(T value, Node<T>* node);
+            Node<T>* append(T value, Node<T>* node);
+            Node<T>* push_back(T value);
+            void erase(Node<T>* node);
 
-        Node<T>* prepend(T value, Node<T>* node);
-        Node<T>* append(T value, Node<T>* node);
-        Node<T>* push_back(T value);
-        void erase(Node<T>* node);
-        size_t size() {
-            return count;
-        }
+            size_t size() {
+                return count;
+            }
+            bool empty() {
+                return count == 0;
+            }
+
+            template <typename T>
+            friend std::ostream& operator<<(std::ostream &os, const List<T> &list);
     };
 
     template<typename T>
@@ -107,11 +120,13 @@ namespace MyContainer {
     }
 
     template <typename T>
-    std::ostream& operator<<(std::ostream &os, const List<T> &vector) {
-        size_t size = vector.getCount();
+    std::ostream& operator<<(std::ostream &os, const List<T> &list) {
+        Node<T>* item = list.first;
 
-        for (size_t i = 0; i < size; i++) {
-            os << vector.items[i] << " ";
+        while(item) {
+            os << item->data << " ";
+
+            item = item->next;
         }
 
         return os;
