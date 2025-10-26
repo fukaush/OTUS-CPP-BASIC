@@ -1,4 +1,4 @@
-#include "vector.hpp."
+#include "vector.hpp"
 #include "build/googletest-src/googletest/include/gtest/gtest.h"
 
 TEST(vector, empty) {
@@ -13,7 +13,7 @@ TEST(vector, getCount) {
     vector.push_back(1);
     vector.push_back(2);
 
-    EXPECT_FALSE(vector.empty());
+    ASSERT_FALSE(vector.empty());
     EXPECT_EQ(vector.getCount(), 2);
 }
 
@@ -33,8 +33,25 @@ TEST(vector, insert) {
     vector.push_back(4);
     vector.insert(2, 3);
 
-    EXPECT_EQ(vector.getCount(), 4);
+    ASSERT_EQ(vector.getCount(), 4);
     EXPECT_EQ(vector[2], 3);
+}
+
+TEST(vector, insert_out_of_range) {
+    MyContainer::Vector<int> vector;
+
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(4);
+
+    try {
+        vector.insert(100, 3);
+        FAIL();
+    } catch (std::out_of_range const &err) {
+        ASSERT_EQ(err.what(), std::string("index вне диапазона items"));
+    } catch(...) {
+        FAIL();
+    }
 }
 
 TEST(vector, subscript) {
@@ -58,6 +75,23 @@ TEST(vector, erase) {
     EXPECT_EQ(vector[1], 4);
 }
 
+TEST(vector, erase_out_of_range) {
+    MyContainer::Vector<int> vector;
+
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(4);
+
+    try {
+        vector.erase(100, 2);
+        FAIL();
+    } catch (std::out_of_range const &err) {
+        ASSERT_EQ(err.what(), std::string("index вне диапазона items"));
+    } catch(...) {
+        FAIL();
+    }
+}
+
 TEST(vector, copy_constructor) {
     MyContainer::Vector<int> origin;
 
@@ -77,9 +111,8 @@ TEST(vector, copy_assignment_operator) {
 
     MyContainer::Vector<int> copy = origin;
 
-    copy = std::move(origin);
-
-    EXPECT_TRUE(origin.empty());
+    ASSERT_EQ(vector.getCount(), 1);
+    EXPECT_TRUE(copy[0] == origin[0]);
 }
 
 TEST(vector, move_assignment_operator) {
@@ -130,4 +163,23 @@ TEST(vector, iterator) {
     std::cout.rdbuf(oldCoutStreamBuf);
 
     EXPECT_EQ(buffer.str(), "1 2 3 4 ");
+}
+
+
+TEST(vector, square_brackets_out_of_range) {
+    MyContainer::Vector<int> vector;
+
+    vector.push_back(1);
+    vector.push_back(2);
+    vector.push_back(4);
+
+    try {
+        vector[100];
+
+        FAIL();
+    } catch (std::out_of_range const &err) {
+        ASSERT_EQ(err.what(), std::string("index вне диапазона items"));
+    } catch(...) {
+        FAIL();
+    }
 }
