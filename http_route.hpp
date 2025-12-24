@@ -75,6 +75,7 @@ http::response<http::string_body> getDefaultResponse(HttpRouteMethodRequestType&
     res.result(http::status::ok);
     res.set(http::field::content_type, "application/json");
     res.content_length(0);
+    res.keep_alive(req.keep_alive());
 
     return res;
 }
