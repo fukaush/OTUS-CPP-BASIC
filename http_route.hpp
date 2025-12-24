@@ -3,7 +3,6 @@
 #include <functional>
 #include <boost/beast/http.hpp>
 #include <boost/beast/core.hpp>
-#include "http_route_builder.hpp"
 
 namespace beast = boost::beast;
 namespace http = beast::http;
@@ -70,7 +69,7 @@ public:
     }
 };
 
-http::response<http::string_body> getDefaultResponse() {
+http::response<http::string_body> getDefaultResponse(HttpRouteMethodRequestType& req) {
     http::response<http::string_body> res;
 
     res.result(http::status::ok);
@@ -107,122 +106,92 @@ public:
 
     http::response<http::string_body> get(urls::url_view& url, HttpRouteMethodRequestType& req) {
         if (httpRouteMethods.get) {
-            http::response<http::string_body> res{};
+            http::response<http::string_body> res = getDefaultResponse(req);
 
-            res.result(http::status::ok);
-            res.set(http::field::content_type, "application/json");
-            res.keep_alive(req.keep_alive());
             res.body() = "get";
             res.prepare_payload();
 
             return httpRouteMethods.get(std::move(res), req);
         }
 
-        return getDefaultResponse();
+        return getDefaultResponse(req);
     }
 
     http::response<http::string_body> post(urls::url_view& url, HttpRouteMethodRequestType& req) {
         if (httpRouteMethods.post) {
-            http::response<http::string_body> res{};
+            http::response<http::string_body> res = getDefaultResponse(req);
 
-            res.result(http::status::ok);
-            res.set(http::field::content_type, "application/json");
-            res.keep_alive(req.keep_alive());
             res.body() = "post";
             res.prepare_payload();
 
             return httpRouteMethods.post(std::move(res), req);
         }
 
-        return getDefaultResponse();
+        return getDefaultResponse(req);
     }
 
     http::response<http::string_body> put(urls::url_view& url, HttpRouteMethodRequestType& req) {
         if (httpRouteMethods.put) {
-            http::response<http::string_body> res{};
+            http::response<http::string_body> res = getDefaultResponse(req);
 
-            res.result(http::status::ok);
-            res.set(http::field::content_type, "application/json");
-            res.keep_alive(req.keep_alive());
             res.body() = "put";
             res.prepare_payload();
 
             return httpRouteMethods.put(std::move(res), req);
         }
 
-        return getDefaultResponse();
+        return getDefaultResponse(req);
     }
 
     http::response<http::string_body> del(urls::url_view& url, HttpRouteMethodRequestType& req) {
         if (httpRouteMethods.del) {
-            http::response<http::string_body> res{};
+            http::response<http::string_body> res = getDefaultResponse(req);
 
-            res.result(http::status::ok);
-            res.set(http::field::content_type, "application/json");
-            res.keep_alive(req.keep_alive());
             res.body() = "del";
             res.prepare_payload();
 
             return httpRouteMethods.del(std::move(res), req);
         }
 
-        return getDefaultResponse();
+        return getDefaultResponse(req);
     }
 
     http::response<http::string_body> head(urls::url_view& url, HttpRouteMethodRequestType& req) {
         if (httpRouteMethods.head) {
-            http::response<http::string_body> res{};
+            http::response<http::string_body> res = getDefaultResponse(req);
 
-            res.result(http::status::ok);
-            res.set(http::field::content_type, "application/json");
-            res.keep_alive(req.keep_alive());
-            res.content_length(0);
-
-            return httpRouteMethods.del(std::move(res), req);
+            return httpRouteMethods.head(std::move(res), req);
         }
 
-        return getDefaultResponse();
+        return getDefaultResponse(req);
     }
 
     http::response<http::string_body> patch(urls::url_view& url, HttpRouteMethodRequestType& req) {
         if (httpRouteMethods.patch) {
-            http::response<http::string_body> res{};
+            http::response<http::string_body> res = getDefaultResponse(req);
 
-            res.result(http::status::ok);
-            res.set(http::field::content_type, "application/json");
-            res.keep_alive(req.keep_alive());
             res.body() = "patch";
             res.prepare_payload();
 
             return httpRouteMethods.patch(std::move(res), req);
         }
 
-        return getDefaultResponse();
+        return getDefaultResponse(req);
     }
 
     http::response<http::string_body> options(urls::url_view& url, HttpRouteMethodRequestType& req) {
         if (httpRouteMethods.options) {
-            http::response<http::string_body> res{};
-
-            res.result(http::status::ok);
-            res.set(http::field::content_type, "application/json");
-            res.keep_alive(req.keep_alive());
-            res.content_length(0);
+            http::response<http::string_body> res = getDefaultResponse(req);
 
             return httpRouteMethods.options(std::move(res), req);
         }
 
-        return getDefaultResponse();
+        return getDefaultResponse(req);
     }
 
     http::response<http::string_body> undefined(urls::url_view& url, HttpRouteMethodRequestType& req) {
         if (httpRouteMethods.undefined) {
-            http::response<http::string_body> res{};
-
-            res.result(http::status::ok);
-            res.set(http::field::content_type, "application/json");
-            res.keep_alive(req.keep_alive());
-            res.content_length(0);
+            http::response<http::string_body> res = getDefaultResponse(req);
 
             return httpRouteMethods.undefined(std::move(res), req);
         }

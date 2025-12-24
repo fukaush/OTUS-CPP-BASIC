@@ -10,7 +10,6 @@ set(BOOST_ROOT "C:/boost")
 find_package(Boost 1.90 REQUIRED COMPONENTS filesystem)
 
 add_executable(http_server
-    http_route_builder.hpp
     http_server.cpp
     http_route.hpp
     http_router.hpp

@@ -8,7 +8,7 @@ class HttpRouter {
 
 public:
     void addRoute(HttpRoute&& route) {
-        routes[route.getPoint()] = route;
+        routes.emplace(route.getPoint(), std::move(route));
     }
 
     std::optional<std::reference_wrapper<HttpRoute>> getHttpRoute(std::string path) {
